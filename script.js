@@ -21,25 +21,39 @@ function getHumanChoice(){
     }
 }
 
-function playRound(humanChoice, computerChoice){
-    function choiceTable(choice){
-        switch(choice){
-            case "rock": return 1;
-            case "scissors": return 0;
-            case "paper": return -1;
+function playGame(){
+    function playRound(humanChoice, computerChoice){
+        function choiceTable(choice){
+            switch(choice){
+                case "rock": return 1;
+                case "scissors": return 0;
+                case "paper": return -1;
+            }
+        }
+    
+        const outcome = choiceTable(humanChoice) - choiceTable(computerChoice);
+        if((outcome > 0 && outcome !== 2)||  outcome === -2){
+            humanScore++;
+            console.log(`You Win! ${humanChoice} beats ${computerChoice}!`);
+        }
+        else if((outcome < 0 && outcome !== -2) || outcome === 2){
+            computerScore++;
+            console.log(`You Lose! ${computerChoice} beats ${humanChoice}!`);
+        }
+        else{
+            console.log(`Draw!`)
         }
     }
-
-    const outcome = choiceTable(humanChoice) - choiceTable(computerChoice);
-    if((outcome > 0 && outcome !== 2)||  outcome === -2){
-        humanScore++;
-        console.log(`You Win! ${humanChoice} beats ${computerChoice}!`);
+    function roundIter(roundFunc, rounds){
+        roundFunc(getHumanChoice(), getComputerChoice());
+        return rounds === 1
+        ? undefined
+        : roundIter(roundFunc, rounds - 1);
     }
-    else if((outcome < 0 && outcome !== -2) || outcome === 2){
-        computerScore++;
-        console.log(`You Lose! ${computerChoice} beats ${humanChoice}!`);
-    }
-    else{
-        console.log(`Draw!`)
-    }
+    roundIter(playRound, 5);
+    return computerScore > humanScore
+    ? console.log("Computer Wins!")
+    : computerScore < humanScore
+        ? console.log("Human Wins!")
+        : console.log("Draw! Nobody Won!")
 }
